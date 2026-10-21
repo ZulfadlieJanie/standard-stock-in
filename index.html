@@ -337,7 +337,7 @@
           </div>
           <div>
             <label>Total In (Quantity)</label>
-            <input type="number" min="1" value="${item.totalIn}" placeholder="Enter quantity" onchange="updateSelectedItem(${index}, 'totalIn', this.value)" required>
+            <input type="number" min="1" step="1" value="${item.totalIn}" placeholder="Enter quantity" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onchange="updateSelectedItem(${index}, 'totalIn', this.value)" required>
           </div>
         </div>
       `;
@@ -364,8 +364,10 @@
 
     for (let i = 0; i < selectedItems.length; i++) {
       const item = selectedItems[i];
-      if (!item.deskripsiPembungkusan || !item.skuPembekalan || item.harga === "" || !item.totalIn) {
-        showMessage(`Please complete all required fields for Item #${i + 1} (${item.namaItem}).`, "error");
+      const totalInQty = parseInt(item.totalIn, 10);
+  
+      if (!item.deskripsiPembungkusan || !item.skuPembekalan || item.harga === "" || !totalInQty || totalInQty <= 0) {
+        showMessage(`Please complete all required fields and enter a valid quantity for Item #${i + 1} (${item.namaItem}).`, "error");
         return;
       }
     }
